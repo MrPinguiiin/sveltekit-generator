@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = require("commander");
-const makeRoute_1 = require("./commands/makeRoute");
-const program = new commander_1.Command();
+import { Command } from 'commander';
+import { makeRoute, makeComponent } from './commands/makeRoute';
+const program = new Command();
 program
-    .version('1.1.0')
+    .version('1.1.1')
     .description('A CLI tool to generate SvelteKit routes, components, and server functions');
 // Command untuk membuat route
 program
@@ -15,7 +13,7 @@ program
     .action((routeName, options) => {
     const isDynamic = !!options.dynamic; // Cek apakah opsi --dynamic digunakan
     const dynamicParam = typeof options.dynamic === 'string' ? options.dynamic : 'id'; // Ambil parameter dinamis atau gunakan 'id' sebagai default
-    (0, makeRoute_1.makeRoute)(routeName, isDynamic, dynamicParam);
+    makeRoute(routeName, isDynamic, dynamicParam);
 });
 // Command untuk membuat komponen
 program
@@ -25,7 +23,7 @@ program
     .action((routeName, componentName, options) => {
     const isDynamic = !!options.dynamic; // Cek apakah opsi --dynamic digunakan
     const dynamicParam = typeof options.dynamic === 'string' ? options.dynamic : 'id'; // Ambil parameter dinamis atau gunakan 'id' sebagai default
-    (0, makeRoute_1.makeComponent)(routeName, componentName, isDynamic, dynamicParam);
+    makeComponent(routeName, componentName, isDynamic, dynamicParam);
 });
 program.parse(process.argv);
 process.on('warning', (warning) => {

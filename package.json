@@ -1,11 +1,10 @@
 {
   "name": "sveltekit-generator",
-  "type": "module",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Inpired by laravel (php artisan make:)",
   "main": "index.js",
   "bin": {
-    "sveltekit-generator": "dist/index.js"
+    "sveltekit-generator": "dist/index.cjs"
   },
   "scripts": {
     "build": "tsc",
