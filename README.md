@@ -31,3 +31,18 @@ pnpm install -g sveltekit-generator
 ```bash
 bun install -g sveltekit-generator
 ```
+
+## Usage
+
+### Generate a new route, run the following command:
+
+```bash
+sveltekit-generator make:route <route_name>
+```
+
+### Generate a dynamic route, run the following command:
+
+```bash
+sveltekit-generator make:route <route_name> --dynamic
+```
+
