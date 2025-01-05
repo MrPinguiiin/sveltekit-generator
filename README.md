@@ -31,6 +31,13 @@ pnpm install -g sveltekit-generator
 ```bash
 bun install -g sveltekit-generator
 ```
+### After installation, you can can put this command in your `package.json` file to use it globally:
+
+```json
+"scripts": {
+    "generate": "sveltekit-generator"
+}
+```
 
 ## Usage
 
