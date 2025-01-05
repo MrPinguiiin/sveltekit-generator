@@ -5,7 +5,7 @@ import path from 'path';
 const validateRouteName = (routeName: string): boolean => {
   const isValid = /^[a-zA-Z0-9-]+$/.test(routeName);
   if (!isValid) {
-    console.log(chalk.red(`Error: Nama route "${routeName}" tidak valid. Hanya boleh mengandung huruf, angka, dan tanda hubung (-).`));
+    console.log(chalk.red(`Error: Route name "${routeName}" is invalid. Only letters, numbers, and hyphens are allowed.`));
   }
   return isValid;
 };
@@ -62,7 +62,44 @@ export const ${routeName}Function = () => {
   shell.mkdir('-p', path.dirname(libPath));
   shell.ShellString(serverFunctionContent).to(libPath);
 
-  console.log(chalk.green(`Route ${routeName} berhasil dibuat!`));
+  console.log(chalk.green(`Route ${routeName} created successfully!`));
 };
 
-export default makeRoute;
+const makeComponent = (routeName: string, componentName: string, isDynamic: boolean = false) => {
+  if (!validateRouteName(routeName)) {
+    return;
+  }
+
+  const componentsDir = path.join(
+    'src',
+    'routes',
+    isDynamic ? `[${routeName}]` : routeName,
+    '(components)'
+  );
+
+  // Buat direktori (components) jika belum ada
+  shell.mkdir('-p', componentsDir);
+
+  // Template untuk komponen Svelte
+  const componentContent = `
+<script lang="ts">
+  // Add your component logic here
+</script>
+
+<div>
+  <h1>${componentName} Component</h1>
+</div>
+
+<style>
+  /* Add your styles here */
+</style>
+`;
+
+  // Buat file komponen
+  const componentPath = path.join(componentsDir, `${componentName}.svelte`);
+  shell.ShellString(componentContent).to(componentPath);
+
+  console.log(chalk.green(`Component ${componentName} created successfully in ${componentsDir}!`));
+};
+
+export { makeRoute, makeComponent };

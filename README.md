@@ -46,3 +46,15 @@ sveltekit-generator make:route <route_name>
 sveltekit-generator make:route <route_name> --dynamic
 ```
 
+### Generate a new component inside a route, run the following command:
+
+```bash
+sveltekit-generator make:component <route_name> <component_name>
+```
+
+### Generate a component inside a dynamic route, run the following command:
+
+```bash
+sveltekit-generator make:component <route_name> <component_name> --dynamic
+```
+
