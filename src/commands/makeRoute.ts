@@ -37,18 +37,20 @@ const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: 
   // Template untuk +page.server.ts
   const pageServerContent = isDynamic
     ? `
-export const load = async ({ params }) => {
-  return {
-    message: \`Hello from ${routeName} with dynamic param: \${params.${dynamicParam}}\`
-  };
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ routeName, params }) => {
+    return {message: \`Hello from ${routeName} with dynamic param: \${params.${dynamicParam}}\`}
 };
+
 `
     : `
-export const load = async () => {
-  return {
-    message: 'Hello from ${routeName}'
-  };
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => {
+    return {message: \`Hello from ${routeName}\`}
 };
+
 `;
 
   // Buat file +page.svelte
@@ -61,7 +63,7 @@ export const load = async () => {
 
   // Template untuk fungsi server
   const serverFunctionContent = `
-export const ${routeName}Function = () => {
+export async function ${routeName}Function() {
   return '${routeName} function';
 };
 `;
