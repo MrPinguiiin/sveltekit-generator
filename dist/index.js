@@ -5,7 +5,7 @@ const commander_1 = require("commander");
 const makeRoute_1 = require("./commands/makeRoute");
 const program = new commander_1.Command();
 program
-    .version('1.0.9')
+    .version('1.1.0')
     .description('A CLI tool to generate SvelteKit routes, components, and server functions');
 // Command untuk membuat route
 program
