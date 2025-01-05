@@ -1,0 +1,27 @@
+{
+  "name": "sveltekit-generator",
+  "version": "1.0.0",
+  "description": "Inpired by laravel (php artisan make:)",
+  "main": "index.js",
+  "bin": {
+    "sveltekit-generator": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "sveltekit-generator"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.0.0",
+    "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/shelljs": "^0.8.15",
+    "typescript": "^5.7.2"
+  }
+}
