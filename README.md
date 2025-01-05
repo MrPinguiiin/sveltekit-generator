@@ -9,7 +9,8 @@
 - **Generate Routes**: Automatically creates `+page.svelte` and `+page.server.ts` files in the `src/routes/` directory.
 - **Route Name Validation**: Ensures route names only contain letters, numbers, and hyphens.
 - **Complex File Templates**: Provides ready-to-use file templates.
-- **Dynamic Routes**: Supports creating dynamic routes (e.g., `[id]`).
+- **Dynamic Routes**: Supports creating dynamic routes (e.g., `[id]`, `[userId]`).
+- **Custom Dynamic Parameters**: Allows you to specify custom dynamic parameters (e.g., `--dynamic userId`).
 
 ---
 
@@ -19,17 +20,17 @@ You can install `sveltekit-generator` using `npm`, `pnpm`, or `bun`:
 
 ### Using npm
 ```bash
-npm install -g sveltekit-generator
+npm i sveltekit-generator
 ```
 
 ### Using pnpm
 ```bash
-pnpm install -g sveltekit-generator
+pnpm i sveltekit-generator
 ```
 
 ### Using bun
 ```bash
-bun install -g sveltekit-generator
+bun install i sveltekit-generator
 ```
 ### After installation, you can can put this command in your `package.json` file to use it globally:
 
@@ -41,27 +42,38 @@ bun install -g sveltekit-generator
 
 ## Usage
 
-### Generate a new route, run the following command:
+### Generate a Basic Route:
 
 ```bash
 pnpm generate make:route <route_name>
 ```
 
-### Generate a dynamic route, run the following command:
+### Generate a Dynamic Route
 
 ```bash
 pnpm generate make:route <route_name> --dynamic
 ```
 
-### Generate a new component inside a route, run the following command:
+### Custom Dynamic Parameter
+
+```bash
+pnpm generate make:route <route_name> --dynamic <param_name>
+```
+
+### Generate a Component Inside a Route
 
 ```bash
 pnpm generate make:component <route_name> <component_name>
 ```
 
-### Generate a component inside a dynamic route, run the following command:
+### Generate a Component Inside a Dynamic Route
 
 ```bash
 pnpm generate make:component <route_name> <component_name> --dynamic
 ```
 
+### Custom Dynamic Parameter:
+
+```bash
+pnpm generate make:component <route_name> <component_name> --dynamic <param_name>
+```
