@@ -6,7 +6,7 @@ import { makeRoute, makeComponent } from './commands/makeRoute';
 const program = new Command();
 
 program
-  .version('1.0.8')
+  .version('1.1.0')
   .description('A CLI tool to generate SvelteKit routes, components, and server functions');
 
 // Command untuk membuat route
@@ -32,3 +32,9 @@ program
   });
 
 program.parse(process.argv);
+process.on('warning', (warning) => {
+  if (warning.name === 'ExperimentalWarning') {
+    return; 
+  }
+  console.warn(warning);
+});

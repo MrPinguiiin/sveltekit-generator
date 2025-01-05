@@ -14,29 +14,42 @@ const validateRouteName = (routeName) => {
     }
     return isValid;
 };
-const makeRoute = (routeName, isDynamic = false) => {
+const makeRoute = (routeName, isDynamic = false, dynamicParam = 'id') => {
     if (!validateRouteName(routeName)) {
         return;
     }
-    const routePath = path_1.default.join('src', 'routes', isDynamic ? `[${routeName}]` : routeName);
+    // Tentukan nama route berdasarkan apakah dynamic atau tidak
+    const routeDirName = isDynamic ? `[${dynamicParam}]` : routeName;
+    const routePath = path_1.default.join('src', 'routes', routeDirName);
     const libPath = path_1.default.join('src', 'lib', 'functions', 'server', `${routeName}.ts`);
     // Buat direktori route
     shelljs_1.default.mkdir('-p', routePath);
     // Template untuk +page.svelte
     const pageSvelteContent = `
 <script lang="ts">
-  
+  export let data;
 </script>
 
 <h1>${routeName} Page</h1>
+<p>{data.message}</p>
 `;
     // Template untuk +page.server.ts
-    const pageServerContent = `
-export const PageServerLoad = async () => {
-  return {
-    message: 'Hello from ${routeName}'
-  };
+    const pageServerContent = isDynamic
+        ? `
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ routeName, params }) => {
+    return {message: \`Hello from ${routeName} with dynamic param: \${params.${dynamicParam}}\`}
 };
+
+`
+        : `
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => {
+    return {message: \`Hello from ${routeName}\`}
+};
+
 `;
     // Buat file +page.svelte
     const pageSveltePath = path_1.default.join(routePath, '+page.svelte');
@@ -46,7 +59,7 @@ export const PageServerLoad = async () => {
     shelljs_1.default.ShellString(pageServerContent).to(pageServerPath);
     // Template untuk fungsi server
     const serverFunctionContent = `
-export const ${routeName}Function = () => {
+export async function ${routeName}Function() {
   return '${routeName} function';
 };
 `;
@@ -61,11 +74,11 @@ export const ${routeName}Function = () => {
     console.log(chalk_1.default.blue(`- Created file: ${libPath}`));
 };
 exports.makeRoute = makeRoute;
-const makeComponent = (routeName, componentName, isDynamic = false) => {
+const makeComponent = (routeName, componentName, isDynamic = false, dynamicParam = 'id') => {
     if (!validateRouteName(routeName)) {
         return;
     }
-    const componentsDir = path_1.default.join('src', 'routes', isDynamic ? `[${routeName}]` : routeName, '(components)');
+    const componentsDir = path_1.default.join('src', 'routes', isDynamic ? `[${dynamicParam}]` : routeName, '(components)');
     // Buat direktori (components) jika belum ada
     shelljs_1.default.mkdir('-p', componentsDir);
     // Template untuk komponen Svelte
@@ -77,6 +90,10 @@ const makeComponent = (routeName, componentName, isDynamic = false) => {
 <div>
   <h1>${componentName} Component</h1>
 </div>
+
+<style>
+  /* Add your styles here */
+</style>
 `;
     // Buat file komponen
     const componentPath = path_1.default.join(componentsDir, `${componentName}.svelte`);
