@@ -3,30 +3,82 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.makeComponent = exports.makeRoute = void 0;
 const chalk_1 = __importDefault(require("chalk"));
 const shelljs_1 = __importDefault(require("shelljs"));
 const path_1 = __importDefault(require("path"));
-const makeRoute = (routeName) => {
-    const routePath = path_1.default.join('src', 'routes', routeName);
-    const libPath = path_1.default.join('src', 'lib', 'functions', 'server', `${routeName}.ts`);
-    // Create route directory
-    shelljs_1.default.mkdir('-p', routePath);
-    // Create +page.svelte
-    shelljs_1.default.touch(path_1.default.join(routePath, '+page.svelte'));
-    shelljs_1.default.ShellString(`<h1>${routeName} Page</h1>`).to(path_1.default.join(routePath, '+page.svelte'));
-    // Create +page.server.ts
-    shelljs_1.default.touch(path_1.default.join(routePath, '+page.server.ts'));
-    shelljs_1.default.ShellString(`export const load = async () => {
-return {
-  message: 'Hello from ${routeName}'
+const validateRouteName = (routeName) => {
+    const isValid = /^[a-zA-Z0-9-]+$/.test(routeName);
+    if (!isValid) {
+        console.log(chalk_1.default.red(`Error: Route name "${routeName}" is invalid. Only letters, numbers, and hyphens are allowed.`));
+    }
+    return isValid;
 };
-};`).to(path_1.default.join(routePath, '+page.server.ts'));
-    // Create server function in lib/functions/server
+const makeRoute = (routeName, isDynamic = false) => {
+    if (!validateRouteName(routeName)) {
+        return;
+    }
+    const routePath = path_1.default.join('src', 'routes', isDynamic ? `[${routeName}]` : routeName);
+    const libPath = path_1.default.join('src', 'lib', 'functions', 'server', `${routeName}.ts`);
+    // Buat direktori route
+    shelljs_1.default.mkdir('-p', routePath);
+    // Template untuk +page.svelte
+    const pageSvelteContent = `
+<script lang="ts">
+  export let data;
+</script>
+
+<h1>${routeName} Page</h1>
+<p>{data.message}</p>
+`;
+    // Template untuk +page.server.ts
+    const pageServerContent = `
+export const load = async () => {
+  return {
+    message: 'Hello from ${routeName}'
+  };
+};
+`;
+    // Buat file +page.svelte
+    shelljs_1.default.ShellString(pageSvelteContent).to(path_1.default.join(routePath, '+page.svelte'));
+    // Buat file +page.server.ts
+    shelljs_1.default.ShellString(pageServerContent).to(path_1.default.join(routePath, '+page.server.ts'));
+    // Template untuk fungsi server
+    const serverFunctionContent = `
+export const ${routeName}Function = () => {
+  return '${routeName} function';
+};
+`;
+    // Buat fungsi server di lib/functions/server
     shelljs_1.default.mkdir('-p', path_1.default.dirname(libPath));
-    shelljs_1.default.touch(libPath);
-    shelljs_1.default.ShellString(`export const ${routeName}Function = () => {
-return '${routeName} function';
-};`).to(libPath);
+    shelljs_1.default.ShellString(serverFunctionContent).to(libPath);
     console.log(chalk_1.default.green(`Route ${routeName} created successfully!`));
 };
-exports.default = makeRoute;
+exports.makeRoute = makeRoute;
+const makeComponent = (routeName, componentName, isDynamic = false) => {
+    if (!validateRouteName(routeName)) {
+        return;
+    }
+    const componentsDir = path_1.default.join('src', 'routes', isDynamic ? `[${routeName}]` : routeName, '(components)');
+    // Buat direktori (components) jika belum ada
+    shelljs_1.default.mkdir('-p', componentsDir);
+    // Template untuk komponen Svelte
+    const componentContent = `
+<script lang="ts">
+  // Add your component logic here
+</script>
+
+<div>
+  <h1>${componentName} Component</h1>
+</div>
+
+<style>
+  /* Add your styles here */
+</style>
+`;
+    // Buat file komponen
+    const componentPath = path_1.default.join(componentsDir, `${componentName}.svelte`);
+    shelljs_1.default.ShellString(componentContent).to(componentPath);
+    console.log(chalk_1.default.green(`Component ${componentName} created successfully in ${componentsDir}!`));
+};
+exports.makeComponent = makeComponent;
