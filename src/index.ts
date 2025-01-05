@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { makeRoute, makeComponent } from './commands/makeRoute';
+import { makeRoute, makeComponent } from './commands/makeRoute.js';
 
 const program = new Command();
 
 program
-  .version('1.1.4')
+  .version('1.1.5')
   .description('A CLI tool to generate SvelteKit routes, components, and server functions');
 
 // Command untuk membuat route

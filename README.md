@@ -48,13 +48,7 @@ bun install i sveltekit-generator
 pnpm generate make:route <route_name>
 ```
 
-### Generate a Dynamic Route
-
-```bash
-pnpm generate make:route <route_name> --dynamic
-```
-
-### Custom Dynamic Parameter
+### Generate / Custom a Dynamic Route existing
 
 ```bash
 pnpm generate make:route <route_name> --dynamic <param_name>
@@ -66,13 +60,7 @@ pnpm generate make:route <route_name> --dynamic <param_name>
 pnpm generate make:component <route_name> <component_name>
 ```
 
-### Generate a Component Inside a Dynamic Route
-
-```bash
-pnpm generate make:component <route_name> <component_name> --dynamic
-```
-
-### Custom Dynamic Parameter:
+### Generate / Custom a Component Inside a Dynamic Route existing
 
 ```bash
 pnpm generate make:component <route_name> <component_name> --dynamic <param_name>
