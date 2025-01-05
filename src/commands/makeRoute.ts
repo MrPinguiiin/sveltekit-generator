@@ -3,9 +3,9 @@ import shell from 'shelljs';
 import path from 'path';
 
 const validateRouteName = (routeName: string): boolean => {
-  const isValid = /^[a-zA-Z0-9-]+$/.test(routeName);
+  const isValid = /^[a-zA-Z0-9-()\/]+$/.test(routeName); // Izinkan huruf, angka, tanda kurung, dan garis miring
   if (!isValid) {
-    console.log(chalk.red(`Error: Route name "${routeName}" is invalid. Only letters, numbers, and hyphens are allowed.`));
+    console.log(chalk.red(`Error: Route name "${routeName}" is invalid. Only letters, numbers, hyphens, parentheses, and slashes are allowed.`));
   }
   return isValid;
 };
@@ -19,8 +19,8 @@ const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: 
 
   // Tentukan path direktori route
   const routePath = isDynamic
-    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`) // Route dinamis: src/routes/store/[storeId]
-    : path.join('src', 'routes', routeName); // Route biasa: src/routes/store
+    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`) // Route dinamis: src/routes/(dashboard)/stores/[storeId]
+    : path.join('src', 'routes', routeName); // Route biasa: src/routes/(dashboard)/stores
 
   // Buat direktori route
   shell.mkdir('-p', routePath);
@@ -31,7 +31,7 @@ const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: 
   export let data;
 </script>
 
-<h1>${routeName} Page</h1>
+<h1>${routeName.split('/').pop()} Page</h1> <!-- Ambil nama route terakhir -->
 <p>{data.message}</p>
 `;
 
@@ -41,14 +41,14 @@ const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: 
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-  return { message: \`Hello from ${routeName} with dynamic param: \${params.${dynamicParam}}\` };
+  return { message: \`Hello from ${routeName.split('/').pop()} with dynamic param: \${params.${dynamicParam}}\` };
 };
 `
     : `
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-  return { message: \`Hello from ${routeName}\` };
+  return { message: \`Hello from ${routeName.split('/').pop()}\` };
 };
 `;
 
@@ -58,10 +58,10 @@ export const load: PageServerLoad = async () => {
 
   // Template untuk fungsi server (hanya untuk route biasa)
   if (!isDynamic) {
-    const libPath = path.join('src', 'lib', 'functions', 'server', `${routeName}.ts`); // Pastikan path mengarah ke src
+    const libPath = path.join('src', 'lib', 'functions', 'server', `${routeName.split('/').pop()}.ts`); // Ambil nama route terakhir
     const serverFunctionContent = `
-export async function ${routeName}Function() {
-  return '${routeName} function';
+export async function ${routeName.split('/').pop()}Function() {
+  return '${routeName.split('/').pop()} function';
 };
 `;
     shell.mkdir('-p', path.dirname(libPath));
@@ -83,8 +83,8 @@ const makeComponent = (routeName: string, componentName: string, isDynamic: bool
 
   // Tentukan path direktori komponen
   const componentsDir = isDynamic
-    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`, '(components)') // Komponen di route dinamis: src/routes/store/[storeId]/(components)
-    : path.join('src', 'routes', routeName, '(components)'); // Komponen di route biasa: src/routes/store/(components)
+    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`, '(components)') // Komponen di route dinamis: src/routes/(dashboard)/stores/[storeId]/(components)
+    : path.join('src', 'routes', routeName, '(components)'); // Komponen di route biasa: src/routes/(dashboard)/stores/(components)
 
   // Buat direktori komponen
   shell.mkdir('-p', componentsDir);

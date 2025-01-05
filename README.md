@@ -65,3 +65,15 @@ pnpm generate make:component <route_name> <component_name>
 ```bash
 pnpm generate make:component <route_name> <component_name> --dynamic <param_name>
 ```
+
+### Generate routes in spesific directory
+
+```bash
+pnpm generate make:route ('(dashboard)/<route_name>')
+```
+
+### Generate dynamic routes in spesific directory
+
+```bash
+pnpm generate make:route ('(dashboard)/<route_name>') --dynamic <param_name>
+```
