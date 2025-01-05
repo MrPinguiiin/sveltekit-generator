@@ -2,33 +2,67 @@ import chalk from 'chalk';
 import shell from 'shelljs';
 import path from 'path';
 
-const makeRoute = (routeName: string) => {
-  const routePath = path.join('src', 'routes', routeName);
+const validateRouteName = (routeName: string): boolean => {
+  const isValid = /^[a-zA-Z0-9-]+$/.test(routeName);
+  if (!isValid) {
+    console.log(chalk.red(`Error: Nama route "${routeName}" tidak valid. Hanya boleh mengandung huruf, angka, dan tanda hubung (-).`));
+  }
+  return isValid;
+};
+
+const makeRoute = (routeName: string, isDynamic: boolean = false) => {
+  if (!validateRouteName(routeName)) {
+    return;
+  }
+
+  const routePath = path.join(
+    'src',
+    'routes',
+    isDynamic ? `[${routeName}]` : routeName
+  );
+
   const libPath = path.join('src', 'lib', 'functions', 'server', `${routeName}.ts`);
 
-  // Create route directory
+  // Buat direktori route
   shell.mkdir('-p', routePath);
 
-  // Create +page.svelte
-  shell.touch(path.join(routePath, '+page.svelte'));
-  shell.ShellString(`<h1>${routeName} Page</h1>`).to(path.join(routePath, '+page.svelte'));
+  // Template untuk +page.svelte
+  const pageSvelteContent = `
+<script lang="ts">
+  export let data;
+</script>
 
-  // Create +page.server.ts
-  shell.touch(path.join(routePath, '+page.server.ts'));
-  shell.ShellString(`export const load = async () => {
-return {
-  message: 'Hello from ${routeName}'
+<h1>${routeName} Page</h1>
+<p>{data.message}</p>
+`;
+
+  // Template untuk +page.server.ts
+  const pageServerContent = `
+export const load = async () => {
+  return {
+    message: 'Hello from ${routeName}'
+  };
 };
-};`).to(path.join(routePath, '+page.server.ts'));
+`;
 
-  // Create server function in lib/functions/server
+  // Buat file +page.svelte
+  shell.ShellString(pageSvelteContent).to(path.join(routePath, '+page.svelte'));
+
+  // Buat file +page.server.ts
+  shell.ShellString(pageServerContent).to(path.join(routePath, '+page.server.ts'));
+
+  // Template untuk fungsi server
+  const serverFunctionContent = `
+export const ${routeName}Function = () => {
+  return '${routeName} function';
+};
+`;
+
+  // Buat fungsi server di lib/functions/server
   shell.mkdir('-p', path.dirname(libPath));
-  shell.touch(libPath);
-  shell.ShellString(`export const ${routeName}Function = () => {
-return '${routeName} function';
-};`).to(libPath);
+  shell.ShellString(serverFunctionContent).to(libPath);
 
-  console.log(chalk.green(`Route ${routeName} created successfully!`));
+  console.log(chalk.green(`Route ${routeName} berhasil dibuat!`));
 };
 
 export default makeRoute;
