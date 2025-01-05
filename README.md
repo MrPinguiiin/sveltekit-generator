@@ -20,3 +20,7 @@ You can install `sveltekit-generator` using `npm`, `pnpm`, or `bun`:
 ### Using npm
 ```bash
 npm install -g sveltekit-generator
+```bash
+pnpm install -g sveltekit-generator
+```bash
+bun install -g sveltekit-generator
