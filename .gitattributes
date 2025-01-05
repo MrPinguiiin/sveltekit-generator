@@ -1,0 +1,5 @@
+# Set semua file ke LF
+* text=auto eol=lf
+
+# Kecuali file binary
+*.bin binary
