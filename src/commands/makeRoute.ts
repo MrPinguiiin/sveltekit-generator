@@ -15,16 +15,16 @@ const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: 
     return;
   }
 
-  // Determine the route name based on whether it's dynamic or not
+  // Tentukan nama route berdasarkan apakah dynamic atau tidak
   const routeDirName = isDynamic ? `[${dynamicParam}]` : routeName;
   const routePath = path.join('src', 'routes', routeDirName);
 
   const libPath = path.join('src', 'lib', 'functions', 'server', `${routeName}.ts`);
 
-  // Make directory route
+  // Buat direktori route
   shell.mkdir('-p', routePath);
 
-  // Template for +page.svelte
+  // Template untuk +page.svelte
   const pageSvelteContent = `
 <script lang="ts">
   export let data;
@@ -34,7 +34,7 @@ const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: 
 <p>{data.message}</p>
 `;
 
-  // Template for +page.server.ts
+  // Template untuk +page.server.ts
   const pageServerContent = isDynamic
     ? `
 export const load = async ({ params }) => {
@@ -51,26 +51,26 @@ export const load = async () => {
 };
 `;
 
-  // Make file +page.svelte
+  // Buat file +page.svelte
   const pageSveltePath = path.join(routePath, '+page.svelte');
   shell.ShellString(pageSvelteContent).to(pageSveltePath);
 
-  // Make file +page.server.ts
+  // Buat file +page.server.ts
   const pageServerPath = path.join(routePath, '+page.server.ts');
   shell.ShellString(pageServerContent).to(pageServerPath);
 
-  // Template for server function
+  // Template untuk fungsi server
   const serverFunctionContent = `
 export const ${routeName}Function = () => {
   return '${routeName} function';
 };
 `;
 
-  // Make file server function in lib/functions/server
+  // Buat fungsi server di lib/functions/server
   shell.mkdir('-p', path.dirname(libPath));
   shell.ShellString(serverFunctionContent).to(libPath);
 
-  // Show details of created files
+  // Tampilkan detail file yang dibuat
   console.log(chalk.green(`Route "${routeName}" created successfully!`));
   console.log(chalk.blue(`- Route directory: ${routePath}`));
   console.log(chalk.blue(`- Created file: ${pageSveltePath}`));
@@ -78,4 +78,44 @@ export const ${routeName}Function = () => {
   console.log(chalk.blue(`- Created file: ${libPath}`));
 };
 
-export { makeRoute };
+const makeComponent = (routeName: string, componentName: string, isDynamic: boolean = false, dynamicParam: string = 'id') => {
+  if (!validateRouteName(routeName)) {
+    return;
+  }
+
+  const componentsDir = path.join(
+    'src',
+    'routes',
+    isDynamic ? `[${dynamicParam}]` : routeName,
+    '(components)'
+  );
+
+  // Buat direktori (components) jika belum ada
+  shell.mkdir('-p', componentsDir);
+
+  // Template untuk komponen Svelte
+  const componentContent = `
+<script lang="ts">
+  // Add your component logic here
+</script>
+
+<div>
+  <h1>${componentName} Component</h1>
+</div>
+
+<style>
+  /* Add your styles here */
+</style>
+`;
+
+  // Buat file komponen
+  const componentPath = path.join(componentsDir, `${componentName}.svelte`);
+  shell.ShellString(componentContent).to(componentPath);
+
+  // Tampilkan detail file yang dibuat
+  console.log(chalk.green(`Component "${componentName}" created successfully!`));
+  console.log(chalk.blue(`- Component directory: ${componentsDir}`));
+  console.log(chalk.blue(`- Created file: ${componentPath}`));
+};
+
+export { makeRoute, makeComponent };
