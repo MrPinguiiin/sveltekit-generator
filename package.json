@@ -1,7 +1,7 @@
 {
   "name": "sveltekit-generator",
   "type": "module",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Inpired by laravel (php artisan make:)",
   "main": "index.js",
   "bin": {
