@@ -11,6 +11,6 @@
     "rootDir": "./src",
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.svelte"],
+  "include": ["src/**/*.ts", "src/**/*.svelte", "src/utils/template.js"],
   "exclude": ["node_modules"]
 }

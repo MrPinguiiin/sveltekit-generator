@@ -9,7 +9,7 @@
     "sveltekit-generator": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc --outDir dist",
+    "build": "tsc --outDir dist && node src/utils/template.js",
     "generate": "tsx src/index.ts"
   },
   "keywords": [
@@ -40,8 +40,10 @@
     "supports-color": "^10.0.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.10.5",
     "@types/shelljs": "^0.8.15",
+    "fs-extra": "^11.2.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
