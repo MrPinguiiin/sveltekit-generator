@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { makeRoute } from './commands/makeRoute';
-import { makeComponent } from './commands/makeComponent';
-import { makeLayout } from './commands/makeLayout';
-import { makeApi } from './commands/makeAPI';
+import { makeRoute } from './commands/makeRoute.js';
+import { makeComponent } from './commands/makeComponent.js';
+import { makeLayout } from './commands/makeLayout.js';
+import { makeApi } from './commands/makeAPI.js';
 
 const program = new Command();
 
