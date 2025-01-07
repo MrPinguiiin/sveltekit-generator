@@ -55,7 +55,7 @@ pnpm generate route <route_name>
 ### Generate / Custom a Dynamic Route existing
 
 ```bash
-pnpm generate route <route_name> --dynamic <param_name>
+pnpm generate route <route_name> -d <param_name>
 ```
 
 ### Generate a Component Inside a Route
@@ -67,7 +67,7 @@ pnpm generate component <route_name> <component_name>
 ### Generate / Custom a Component Inside a Dynamic Route existing
 
 ```bash
-pnpm generate component <route_name> <component_name> --dynamic <param_name>
+pnpm generate component <route_name> -d <param_name> <component_name>
 ```
 
 ### Generate routes in spesific directory
@@ -91,7 +91,7 @@ pnpm generate api <api_name>
 ### Generate a Dynamic API endpoint
 
 ```bash
-pnpm generate api <api_name> --dynamic <param_name>
+pnpm generate api <api_name> -d <param_name>
 ```
 
 ### Generate a Layout
