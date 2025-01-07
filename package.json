@@ -1,6 +1,6 @@
 {
   "name": "sveltekit-generator",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Inspired by Laravel (php artisan make:)",
   "license": "MIT",
   "main": "index.js",
