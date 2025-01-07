@@ -1,0 +1,11 @@
+<script lang="ts">
+  // Add your component logic here
+</script>
+
+<div>
+  <h1>{{componentName}} Component</h1>
+</div>
+
+<style>
+  /* Add your styles here */
+</style>

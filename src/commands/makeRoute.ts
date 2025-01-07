@@ -1,117 +1,65 @@
-import chalk from 'chalk';
-import shell from 'shelljs';
 import path from 'path';
+import shell from 'shelljs';
+import chalk from 'chalk';
+import { validateRouteName } from '../utils/validateRouteName.js';
+import { createFile } from '../utils/createFile.js';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 
-const validateRouteName = (routeName: string): boolean => {
-  const isValid = /^[a-zA-Z0-9-()\/]+$/.test(routeName); // Izinkan huruf, angka, tanda kurung, dan garis miring
-  if (!isValid) {
-    console.log(chalk.red(`Error: Route name "${routeName}" is invalid. Only letters, numbers, hyphens, parentheses, and slashes are allowed.`));
-  }
-  return isValid;
-};
+// Dapatkan __dirname menggunakan import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const createFile = (filePath: string, content: string) => {
-  shell.ShellString(content).to(filePath);
-};
-
-const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: string = 'id') => {
+export const makeRoute = (routeName: string, isDynamic: boolean = false, dynamicParam: string = 'id') => {
   if (!validateRouteName(routeName)) return;
 
-  // Tentukan path direktori route
   const routePath = isDynamic
-    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`) // Route dinamis: src/routes/(dashboard)/stores/[storeId]
-    : path.join('src', 'routes', routeName); // Route biasa: src/routes/(dashboard)/stores
+    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`)
+    : path.join('src', 'routes', routeName);
 
-  // Buat direktori route
   shell.mkdir('-p', routePath);
 
-  // Template untuk +page.svelte
-  const pageSvelteContent = `
-<script lang="ts">
-  export let data;
-</script>
+  // Baca template dari file
+  let pageSvelteContent: string;
+  let pageServerContent: string;
+  let serverFunctionContent: string;
 
-<h1>${routeName.split('/').pop()} Page</h1> <!-- Ambil nama route terakhir -->
-<p>{data.message}</p>
-`;
+  try {
+    const pageSvelteTemplate = readFileSync(path.join(__dirname, '../templates/pageSvelte.template'), 'utf-8');
+    const pageServerTemplate = readFileSync(path.join(__dirname, '../templates/pageServer.template'), 'utf-8');
+    const serverFunctionTemplate = readFileSync(path.join(__dirname, '../templates/serverFunction.template'), 'utf-8');
 
-  // Template untuk +page.server.ts
-  const pageServerContent = isDynamic
-    ? `
-import type { PageServerLoad } from './$types';
+    // Ganti placeholder dengan nilai yang sesuai
+    const routeNameFormatted = routeName.split('/').pop() || '';
+    pageSvelteContent = pageSvelteTemplate.replace(/{{routeName}}/g, routeNameFormatted);
+    pageServerContent = isDynamic
+      ? pageServerTemplate
+          .replace(/{{routeName}}/g, routeNameFormatted)
+          .replace(/{{dynamicParam}}/g, dynamicParam)
+      : pageServerTemplate.replace(/{{routeName}}/g, routeNameFormatted);
 
-export const load: PageServerLoad = async ({ params }) => {
-  return { message: \`Hello from ${routeName.split('/').pop()} with dynamic param: \${params.${dynamicParam}}\` };
-};
-`
-    : `
-import type { PageServerLoad } from './$types';
-
-export const load: PageServerLoad = async () => {
-  return { message: \`Hello from ${routeName.split('/').pop()}\` };
-};
-`;
-
-  // Buat file +page.svelte dan +page.server.ts
-  createFile(path.join(routePath, '+page.svelte'), pageSvelteContent);
-  createFile(path.join(routePath, '+page.server.ts'), pageServerContent);
-
-  // Template untuk fungsi server (hanya untuk route biasa)
-  if (!isDynamic) {
-    const libPath = path.join('src', 'lib', 'functions', 'server', `${routeName.split('/').pop()}.ts`); // Ambil nama route terakhir
-    const serverFunctionContent = `
-export async function ${routeName.split('/').pop()}Function() {
-  return '${routeName.split('/').pop()} function';
-};
-`;
-    shell.mkdir('-p', path.dirname(libPath));
-    createFile(libPath, serverFunctionContent);
-
-    // Tampilkan output untuk file server function
-    console.log(chalk.blue(`- Created file: ${libPath}`));
+    // Buat konten untuk server function
+    serverFunctionContent = serverFunctionTemplate.replace(/{{functionName}}/g, routeNameFormatted);
+  } catch (error) {
+    console.error(chalk.red('Error reading template files:'), error);
+    return;
   }
 
-  // Tampilkan output
+  // Buat file +page.svelte dan +page.server.ts
+  const pageSveltePath = path.join(routePath, '+page.svelte');
+  const pageServerPath = path.join(routePath, '+page.server.ts');
+  createFile(pageSveltePath, pageSvelteContent);
+  createFile(pageServerPath, pageServerContent);
+
+  // Buat file server function di src/lib/functions/server
+  const serverFunctionPath = path.join('src', 'lib', 'functions', 'server', `${routeName.split('/').pop()}.ts`);
+  shell.mkdir('-p', path.dirname(serverFunctionPath));
+  createFile(serverFunctionPath, serverFunctionContent);
+
+  // Log route dan file yang di-generate
   console.log(chalk.green(`Route "${routeName}${isDynamic ? `/[${dynamicParam}]` : ''}" created successfully!`));
   console.log(chalk.blue(`- Route directory: ${routePath}`));
-  console.log(chalk.blue(`- Created file: ${path.join(routePath, '+page.svelte')}`));
-  console.log(chalk.blue(`- Created file: ${path.join(routePath, '+page.server.ts')}`));
+  console.log(chalk.blue(`- Created file: ${pageSveltePath}`));
+  console.log(chalk.blue(`- Created file: ${pageServerPath}`));
+  console.log(chalk.blue(`- Created server function: ${serverFunctionPath}`));
 };
-
-const makeComponent = (routeName: string, componentName: string, isDynamic: boolean = false, dynamicParam: string = 'id') => {
-  if (!validateRouteName(routeName)) return;
-
-  // Tentukan path direktori komponen
-  const componentsDir = isDynamic
-    ? path.join('src', 'routes', routeName, `[${dynamicParam}]`, '(components)') // Komponen di route dinamis: src/routes/(dashboard)/stores/[storeId]/(components)
-    : path.join('src', 'routes', routeName, '(components)'); // Komponen di route biasa: src/routes/(dashboard)/stores/(components)
-
-  // Buat direktori komponen
-  shell.mkdir('-p', componentsDir);
-
-  // Template untuk komponen Svelte
-  const componentContent = `
-<script lang="ts">
-  // Add your component logic here
-</script>
-
-<div>
-  <h1>${componentName} Component</h1>
-</div>
-
-<style>
-  /* Add your styles here */
-</style>
-`;
-
-  // Buat file komponen
-  const componentPath = path.join(componentsDir, `${componentName}.svelte`);
-  createFile(componentPath, componentContent);
-
-  // Tampilkan output
-  console.log(chalk.green(`Component "${componentName}" created successfully!`));
-  console.log(chalk.blue(`- Component directory: ${componentsDir}`));
-  console.log(chalk.blue(`- Created file: ${componentPath}`));
-};
-
-export { makeRoute, makeComponent };

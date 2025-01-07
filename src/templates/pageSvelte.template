@@ -1,0 +1,6 @@
+<script lang="ts">
+  export let data;
+</script>
+
+<h1>{{routeName}} Page</h1>
+<p>{data.message}</p>

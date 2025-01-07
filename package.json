@@ -1,20 +1,37 @@
 {
   "name": "sveltekit-generator",
   "version": "1.1.6",
-  "description": "Inpired by laravel (php artisan make:)",
+  "description": "Inspired by Laravel (php artisan make:)",
+  "license": "MIT",
   "main": "index.js",
   "type": "module",
   "bin": {
     "sveltekit-generator": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "node dist/index.js"
+    "build": "tsc --outDir dist",
+    "generate": "tsx src/index.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "sveltekit",
+    "svelte",
+    "generator",
+    "cli",
+    "routes",
+    "dynamic-routes",
+    "sveltekit-routes",
+    "sveltekit-generator",
+    "sveltekit-tools",
+    "sveltekit-cli",
+    "sveltekit-automation",
+    "sveltekit-scaffolding",
+    "sveltekit-templates",
+    "sveltekit-components",
+    "sveltekit-api",
+    "sveltekit-layouts",
+    "sveltekit-utilities"
+  ],
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "chalk": "^5.4.1",
     "commander": "^13.0.0",
@@ -25,7 +42,7 @@
   "devDependencies": {
     "@types/node": "^22.10.5",
     "@types/shelljs": "^0.8.15",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
 }
