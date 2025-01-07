@@ -3,10 +3,10 @@
   "version": "2.0.2",
   "description": "Inspired by Laravel (php artisan make:)",
   "license": "MIT",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "sveltekit-generator": "dist/index.ts"
+    "sveltekit-generator": "dist/index.js"
   },
   "scripts": {
     "build": "tsc --outDir dist",
@@ -45,4 +45,4 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
-}
+} 
