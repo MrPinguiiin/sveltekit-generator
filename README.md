@@ -46,31 +46,17 @@ bun install i sveltekit-generator
 
 ## Usage
 
-### Generate a Basic Route:
+## Generate a Basic Route:
 
 ```bash
 pnpm generate route <route_name>
 ```
 
-
-### Generate / Custom a Dynamic Route existing
+### Custom a Dynamic Route Parameter
 
 ```bash
 pnpm generate route <route_name> -d <param_name>
 ```
-
-### Generate a Component Inside a Route
-
-```bash
-pnpm generate component <route_name> <component_name>
-```
-
-### Generate / Custom a Component Inside a Dynamic Route existing
-
-```bash
-pnpm generate component <route_name> -d <param_name> <component_name>
-```
-
 ### Generate routes in spesific directory
 
 ```bash
@@ -82,8 +68,17 @@ pnpm generate route ('(folder_name)/<route_name>')
 ```bash
 pnpm generate route ('(folder_name)/<route_name>') --dynamic <param_name>
 ```
+### Generate a Component Inside a Route
+```bash
+pnpm generate component <route_name> <component_name>
+```
+### Generate / Custom a Component Inside a Dynamic Route existing
 
-### generate API endpoint
+```bash
+pnpm generate component <route_name> -d <param_name> <component_name>
+```
+
+## Generate API endpoint
 
 ```bash
 pnpm generate api <api_name>
@@ -95,19 +90,19 @@ pnpm generate api <api_name>
 pnpm generate api <api_name> -d <param_name>
 ```
 
-### Generate a Layout
+## Generate a Layout
 
 ```bash
 pnpm generate layout <layout_name>
 ```
 
-### Generate a Store (type: writable, readable, derived)
+## Generate a Store (type: writable, readable, derived)
 
 ```bash
 pnpm generate store <store_name>
 ```
 
-## Generate a Store with a different type
+### Generate a Store with a different type
 
 ```bash
 pnpm generate store <store_name> -t readable
@@ -121,7 +116,7 @@ pnpm generate store <store_name> -t derived
 pnpm generate store <store_name> -t writable
 ```
 
-## Generate a store in spesific path
+### Generate a store in spesific path
 
 ```bash
 pnpm generate store <store_name> -p <path>
