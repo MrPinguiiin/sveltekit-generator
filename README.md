@@ -7,12 +7,13 @@
 ## Features
 
 - **Generate Routes**: Automatically creates `+page.svelte` and `+page.server.ts` files in the `src/routes/` directory.
-- **Dynamic Routes**: Supports creating dynamic routes (e.g., `[id]`, `[userId]`).
-- **Custom Dynamic Parameters**: Allows you to specify custom dynamic parameters (e.g., `--dynamic userId`).
-- **Component Generation**: Easily create Svelte components inside route directories.
-- **API Endpoint Generation**: Automatically generates `+server.ts` files for API endpoints.
-- **Layout Generation**: Quickly create layout files (`+layout.svelte` and `+layout.server.ts`) for consistent page structures.
+- **Dynamic Route Parameters**: Supports creating dynamic routes parameter (e.g., `/user/[id]`, `store/[storeId]`).
+- **Custom Dynamic Parameters**: Allows you to specify custom dynamic parameters (e.g., `--dynamic userId` or using the `-d` flag).
+- **Component Generator**: Easily create Svelte components inside route directories.
+- **API Endpoint Generator**: Automatically generates `+server.ts` files for API endpoints.
+- **Layout Generator**: Quickly create layout files (`+layout.svelte` and `+layout.server.ts`) for consistent page structures.
 - **Route Name Validation**: Ensures route names only contain letters, numbers, and hyphens.
+- **Route Store Validation and Creation**: Validates and creates stores automatically (e.g., src/lib/stores).
 - **Ready-to-Use Templates**: Provides pre-built file templates for quick setup.
 
 ---
@@ -99,6 +100,33 @@ pnpm generate api <api_name> -d <param_name>
 ```bash
 pnpm generate layout <layout_name>
 ```
+
+### Generate a Store (type: writable, readable, derived)
+
+```bash
+pnpm generate store <store_name>
+```
+
+## Generate a Store with a different type
+
+```bash
+pnpm generate store <store_name> -t readable
+```
+
+```bash
+pnpm generate store <store_name> -t derived
+```
+
+```bash
+pnpm generate store <store_name> -t writable
+```
+
+## Generate a store in spesific path
+
+```bash
+pnpm generate store <store_name> -p <path>
+```
+
 
 
 **Why Use SvelteKit Generator?**

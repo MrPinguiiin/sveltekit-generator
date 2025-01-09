@@ -3,6 +3,7 @@ import { makeRoute } from './commands/makeRoute.js';
 import { makeComponent } from './commands/makeComponent.js';
 import { makeLayout } from './commands/makeLayout.js';
 import { makeApi } from './commands/makeAPI.js';
+import { makeStore } from './commands/makeStore.js';
 
 const program = new Command();
 
@@ -49,6 +50,16 @@ program
     const isDynamic = !!options.dynamic;
     const dynamicParam = typeof options.dynamic === 'string' ? options.dynamic : 'id';
     makeApi(apiName, isDynamic, dynamicParam);
+  });
+
+  program
+  .command('store <storeName>')
+  .description('Generate a new Svelte store (writable, readable, or derived)')
+  .option('-t, --type <type>', 'Type of store (writable, readable, or derived)', 'writable')
+  .option('-p, --path <path>', 'Custom path to create the store (default: src/lib/stores)')
+  .action((storeName, options) => {
+    const { type, path } = options;
+    makeStore(storeName, type, path);
   });
 
 program.parse(process.argv);

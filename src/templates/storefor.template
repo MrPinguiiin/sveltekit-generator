@@ -1,0 +1,35 @@
+// writable store template
+writable = `
+import { writable } from 'svelte/store';
+
+export const {{storeName}} = writable<any>(null);
+`;
+
+// readable store template
+readable = `
+import { readable } from 'svelte/store';
+
+export const {{storeName}} = readable<any>(null, (set) => {
+  // Initialize your store value here
+  set(null);
+
+  return () => {
+    // Cleanup logic (if needed)
+  };
+});
+`;
+
+// derived store template
+derived = `
+import { derived } from 'svelte/store';
+import { someOtherStore } from './someOtherStore';
+
+export const {{storeName}} = derived(
+  someOtherStore,
+  ($someOtherStore, set) => {
+    // Derive your value here
+    set($someOtherStore);
+  },
+  null // Initial value
+);
+`;
